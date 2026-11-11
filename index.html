@@ -330,7 +330,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
-
+set(ref(db, "connectionTest/status"), {
+  connected: true,
+  game: "FRONTLINE FPS"
+})
+.then(() => console.log("DATABASE TERHUBUNG"))
+.catch(error => console.error("GAGAL:", error));
 window.firebaseDB = db;
 
 console.log("FRONTLINE FPS: Firebase siap!");
