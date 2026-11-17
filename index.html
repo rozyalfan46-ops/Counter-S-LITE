@@ -1,44 +1,47 @@
 
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>NEON STRIKE MOBILE V2</title>
+<title>NEON STRIKE MOBILE V3</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#080e1b;color:white;font-family:Arial;touch-action:none}
+body{margin:0;background:#080e19;color:white;font-family:Arial;overflow:hidden;touch-action:none}
 #game{position:fixed;inset:0}
-#hud{position:fixed;top:12px;left:10px;right:10px;display:flex;justify-content:space-between;gap:5px;pointer-events:none}
-.panel{background:#101d31dd;border:1px solid #27dafa88;border-radius:9px;padding:9px;font-size:12px}
-#cross{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#56f5ff;font-size:25px;pointer-events:none}
+#hud{position:fixed;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none;gap:5px}
+.panel{background:#101d30dd;border:1px solid #32dafa77;border-radius:9px;padding:9px;font-size:12px}
+#cross{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:24px;color:#56efff;pointer-events:none}
 #controls{position:fixed;bottom:18px;left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:0 18px}
 #stick{width:105px;height:105px;border:2px solid #4eeaff88;border-radius:50%;background:#18324b99;position:relative;touch-action:none}
-#knob{width:42px;height:42px;border-radius:50%;background:#4eeaffbb;position:absolute;left:30px;top:30px}
-#fire{width:78px;height:78px;border:2px solid #ffb2bd;border-radius:50%;background:#ed4261;color:white;font-weight:bold}
+#knob{position:absolute;left:30px;top:30px;width:42px;height:42px;background:#4eeaffbb;border-radius:50%}
+#fire{width:78px;height:78px;border:2px solid #ff9eae;border-radius:50%;background:#e83b5e;color:white;font-weight:bold}
 #menu,#editor{position:fixed;inset:0;z-index:5;background:#080e1bf5;display:flex;align-items:center;justify-content:center;overflow:auto}
-.box{width:90%;max-width:390px;background:#111f34;border:1px solid #35dafa66;border-radius:18px;padding:20px;text-align:center}
-h1{color:#47eaff;letter-spacing:3px}
+.box{width:90%;max-width:390px;background:#112036;border:1px solid #35dafa66;border-radius:18px;padding:20px;text-align:center}
+h1{color:#45eaff;letter-spacing:3px}
 button{border:0;border-radius:9px;padding:12px;background:#25d3ed;color:#06121d;font-weight:bold}
-input{width:100%;padding:12px;background:#071421;border:1px solid #34536b;color:white;border-radius:8px;margin:6px 0}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input{width:100%;padding:12px;margin:6px 0;background:#071421;border:1px solid #34536b;color:white;border-radius:8px}
+.actions,.tools{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
 #editor{display:none;flex-direction:column;padding:12px;gap:10px}
 #drawCanvas{width:100%;height:55vh;max-height:500px;background:#080808;border:1px solid #48eaff;border-radius:12px;touch-action:none}
-.tools{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}
-.tools button{padding:10px}
-#message{color:#82dfff;font-size:12px;min-height:18px}
+.tools button{padding:9px}
+#message{color:#8ce8ff;font-size:12px;min-height:18px}
 #weaponLabel{position:fixed;bottom:130px;right:18px;color:#a7eaff;font-size:10px;pointer-events:none}
 </style>
 </head>
 <body>
+
 <div id="game"></div>
+
 <div id="hud">
  <div class="panel">SCORE: <b id="score">0</b></div>
  <div class="panel">ROOM: <b id="room">SOLO</b></div>
- <div class="panel">PLAYERS: <b id="players">1/8</b></div>
+ <div class="panel">PLAYER: <b id="players">1/8</b></div>
 </div>
+
 <div id="cross">+</div>
-<div id="weaponLabel">CUSTOM BLASTER</div>
+<div id="weaponLabel">CUSTOM WEAPON</div>
 
 <div id="controls">
  <div id="stick"><div id="knob"></div></div>
@@ -48,8 +51,8 @@ input{width:100%;padding:12px;background:#071421;border:1px solid #34536b;color:
 <div id="menu">
  <div class="box">
   <h1>NEON STRIKE</h1>
-  <p>DRAW YOUR WEAPON</p>
-  <p style="font-size:12px;color:#a8bed0">MOBILE 3D FPS</p>
+  <p>FIRST PERSON SHOOTER</p>
+  <p style="font-size:12px;color:#a9bed0">DRAW YOUR OWN WEAPON</p>
   <input id="name" maxlength="16" placeholder="Nama pemain">
   <button id="solo" style="width:100%;margin:7px 0">MAIN SENDIRI</button>
   <div class="actions">
@@ -57,14 +60,14 @@ input{width:100%;padding:12px;background:#071421;border:1px solid #34536b;color:
    <button id="join">GABUNG ROOM</button>
   </div>
   <input id="roomCode" placeholder="Kode room teman">
-  <button id="openEditor" style="width:100%;margin-top:8px">GAMBAR SENJATA SENDIRI</button>
+  <button id="openEditor" style="width:100%;margin-top:8px">GAMBAR SENJATA</button>
   <p id="message">Pilih mode permainan</p>
  </div>
 </div>
 
 <div id="editor">
- <h2 style="color:#49eaff;margin:5px">STUDIO SENJATA</h2>
- <p style="font-size:12px;color:#abc">Gambar bebas. Mulai dari titik mana saja!</p>
+ <h2 style="color:#45eaff">STUDIO SENJATA</h2>
+ <p style="font-size:12px;color:#a9bed0">Gambar bebas dari titik mana saja!</p>
  <canvas id="drawCanvas"></canvas>
  <div class="tools">
   <button data-color="#ffffff">Putih</button>
@@ -81,20 +84,26 @@ input{width:100%;padding:12px;background:#071421;border:1px solid #34536b;color:
 </div>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
 <script type="module">
 import * as THREE from
 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
 const $=id=>document.getElementById(id);
+
+// SCENE
 const scene=new THREE.Scene();
 scene.background=new THREE.Color(0x091426);
 scene.fog=new THREE.Fog(0x091426,20,55);
 
-const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,100);
+const camera=new THREE.PerspectiveCamera(
+ 75,innerWidth/innerHeight,.05,100
+);
 camera.position.set(0,1.7,5);
 
 const renderer=new THREE.WebGLRenderer({
- antialias:false,powerPreference:'low-power'
+ antialias:false,
+ powerPreference:'low-power'
 });
 renderer.setPixelRatio(Math.min(devicePixelRatio,1));
 renderer.setSize(innerWidth,innerHeight);
@@ -106,7 +115,7 @@ const sun=new THREE.DirectionalLight(0xffffff,1);
 sun.position.set(3,8,5);
 scene.add(sun);
 
-// Arena 3D
+// ARENA
 const floor=new THREE.Mesh(
  new THREE.PlaneGeometry(48,48),
  new THREE.MeshLambertMaterial({color:0x17283d})
@@ -119,12 +128,12 @@ grid.position.y=.02;
 scene.add(grid);
 
 function wall(x,y,z,sx,sy,sz){
- const obj=new THREE.Mesh(
+ const m=new THREE.Mesh(
   new THREE.BoxGeometry(sx,sy,sz),
   new THREE.MeshLambertMaterial({color:0x2b4058})
  );
- obj.position.set(x,y,z);
- scene.add(obj);
+ m.position.set(x,y,z);
+ scene.add(m);
 }
 wall(0,2,-24,48,4,1);
 wall(0,2,24,48,4,1);
@@ -133,103 +142,178 @@ wall(24,2,0,1,4,48);
 
 for(let i=0;i<14;i++){
  const h=1+Math.random()*1.3;
- const block=new THREE.Mesh(
+ const b=new THREE.Mesh(
   new THREE.BoxGeometry(2,h,2),
   new THREE.MeshLambertMaterial({color:0x263e58})
  );
- block.position.set((Math.random()-.5)*35,h/2,-Math.random()*22);
- scene.add(block);
+ b.position.set((Math.random()-.5)*35,h/2,-Math.random()*22);
+ scene.add(b);
 }
 
-// Target latihan
+// TARGET
 const targets=[];
 function createTarget(x,z){
- const group=new THREE.Group();
+ const g=new THREE.Group();
  const body=new THREE.Mesh(
   new THREE.BoxGeometry(.8,1.2,.55),
   new THREE.MeshLambertMaterial({color:0xff426b})
  );
  body.position.y=.8;
- group.add(body);
+ g.add(body);
+
  const head=new THREE.Mesh(
   new THREE.SphereGeometry(.28,8,6),
   new THREE.MeshLambertMaterial({color:0xffd36c})
  );
  head.position.y=1.55;
- group.add(head);
- group.position.set(x,0,z);
- scene.add(group);
- targets.push(group);
+ g.add(head);
+ g.position.set(x,0,z);
+ scene.add(g);
+ targets.push(g);
 }
-for(let i=0;i<8;i++){
- createTarget((Math.random()-.5)*18,-9-Math.random()*13);
-}
-
-// Senjata kapur
-const weaponCanvas=document.createElement('canvas');
-weaponCanvas.width=512;
-weaponCanvas.height=320;
-const wctx=weaponCanvas.getContext('2d');
-
-function defaultWeapon(){
- wctx.clearRect(0,0,512,320);
- wctx.strokeStyle='#ffffff';
- wctx.lineWidth=11;
- wctx.lineCap='round';
- wctx.lineJoin='round';
- wctx.strokeRect(110,115,230,85);
- wctx.strokeRect(260,195,65,75);
- wctx.strokeRect(335,140,100,30);
- wctx.beginPath();
- wctx.moveTo(150,115);wctx.lineTo(185,75);
- wctx.lineTo(300,75);wctx.lineTo(340,115);
- wctx.stroke();
- wctx.beginPath();
- wctx.moveTo(140,155);wctx.lineTo(305,155);
- wctx.stroke();
-}
-defaultWeapon();
-
-function loadWeapon(){
- const saved=localStorage.getItem('neonWeapon');
- if(saved){
-  const img=new Image();
-  img.onload=()=>{
-   wctx.clearRect(0,0,512,320);
-   wctx.drawImage(img,0,0,512,320);
-   weaponTexture.needsUpdate=true;
-  };
-  img.src=saved;
+function spawnTargets(){
+ for(let i=0;i<8;i++){
+  createTarget((Math.random()-.5)*18,-9-Math.random()*13);
  }
 }
+spawnTargets();
 
-const weaponTexture=new THREE.CanvasTexture(weaponCanvas);
-weaponTexture.colorSpace=THREE.SRGBColorSpace;
-const weapon=new THREE.Mesh(
- new THREE.PlaneGeometry(1.15,.72),
+// ==================================
+// SENJATA 3D + TANGAN 3D
+// ==================================
+
+const weaponGroup=new THREE.Group();
+camera.add(weaponGroup);
+
+// Material
+const gunMat=new THREE.MeshLambertMaterial({
+ color:0x354b61
+});
+const metalMat=new THREE.MeshLambertMaterial({
+ color:0x9ab0c5
+});
+const gloveMat=new THREE.MeshLambertMaterial({
+ color:0x263b55
+});
+const fingerMat=new THREE.MeshLambertMaterial({
+ color:0x405b78
+});
+const accentMat=new THREE.MeshBasicMaterial({
+ color:0x20dfff
+});
+
+// Helper
+function part(parent,geo,mat,x,y,z,rx=0,ry=0,rz=0){
+ const m=new THREE.Mesh(geo,mat);
+ m.position.set(x,y,z);
+ m.rotation.set(rx,ry,rz);
+ m.renderOrder=20;
+ parent.add(m);
+ return m;
+}
+
+// BADAN SENJATA
+part(weaponGroup,new THREE.BoxGeometry(.24,.17,.58),gunMat,
+ .43,-.32,-.78);
+part(weaponGroup,new THREE.BoxGeometry(.13,.13,.42),metalMat,
+ .43,-.25,-1.08);
+part(weaponGroup,new THREE.CylinderGeometry(.045,.045,.24,8),
+ metalMat,.43,-.25,-1.38,Math.PI/2);
+part(weaponGroup,new THREE.BoxGeometry(.10,.12,.18),accentMat,
+ .43,-.215,-.78);
+part(weaponGroup,new THREE.BoxGeometry(.13,.10,.22),gunMat,
+ .43,-.18,-.65);
+
+// GAGANG
+part(weaponGroup,new THREE.BoxGeometry(.14,.29,.16),gunMat,
+ .43,-.52,-.59,.2,0,.05);
+
+// TANGAN KANAN
+const rightHand=new THREE.Group();
+weaponGroup.add(rightHand);
+
+part(rightHand,new THREE.BoxGeometry(.19,.12,.22),gloveMat,
+ .43,-.48,-.55);
+
+for(let i=0;i<4;i++){
+ part(rightHand,new THREE.CapsuleGeometry(.027,.12,3,5),
+ fingerMat,.36+i*.045,-.49,-.66,.7,0,0);
+}
+part(rightHand,new THREE.CapsuleGeometry(.03,.10,3,5),
+ fingerMat,.53,-.43,-.62,.2,0,-.7);
+
+// LENGAN KANAN
+part(weaponGroup,new THREE.CylinderGeometry(.09,.12,.32,7),
+ gloveMat,.46,-.64,-.37,.5,0,0);
+
+// TANGAN KIRI PENYANGGA
+const leftHand=new THREE.Group();
+weaponGroup.add(leftHand);
+
+part(leftHand,new THREE.BoxGeometry(.17,.12,.19),
+ gloveMat,.27,-.34,-1.02);
+
+for(let i=0;i<3;i++){
+ part(leftHand,new THREE.CapsuleGeometry(.025,.10,3,5),
+ fingerMat,.22+i*.04,-.35,-1.10,.8,0,0);
+}
+part(weaponGroup,new THREE.CylinderGeometry(.09,.11,.26,7),
+ gloveMat,.25,-.46,-.89,.8,0,0);
+
+// GAMBAR PEMAIN MENEMPEL PADA SENJATA
+const decalCanvas=document.createElement('canvas');
+decalCanvas.width=512;
+decalCanvas.height=320;
+const decalCtx=decalCanvas.getContext('2d');
+
+function defaultDrawing(){
+ decalCtx.clearRect(0,0,512,320);
+ decalCtx.strokeStyle='white';
+ decalCtx.lineWidth=12;
+ decalCtx.lineCap='round';
+ decalCtx.strokeRect(80,110,340,100);
+ decalCtx.beginPath();
+ decalCtx.moveTo(140,110);
+ decalCtx.lineTo(190,65);
+ decalCtx.lineTo(330,65);
+ decalCtx.lineTo(380,110);
+ decalCtx.stroke();
+}
+defaultDrawing();
+
+const texture=new THREE.CanvasTexture(decalCanvas);
+texture.colorSpace=THREE.SRGBColorSpace;
+
+const decal=new THREE.Mesh(
+ new THREE.PlaneGeometry(.19,.105),
  new THREE.MeshBasicMaterial({
-  map:weaponTexture,transparent:true,
-  depthTest:false,depthWrite:false
+  map:texture,
+  transparent:true,
+  depthTest:false
  })
 );
-weapon.position.set(.57,-.47,-1.15);
-weapon.renderOrder=1000;
-camera.add(weapon);
-scene.add(camera);
-loadWeapon();
+decal.position.set(.555,-.32,-.785);
+decal.renderOrder=30;
+weaponGroup.add(decal);
 
-// Editor gambar bebas
+// POSISI TANGAN DAN SENJATA DI KAMERA
+weaponGroup.position.set(0,0,0);
+
+// DRAWING STUDIO
 const canvas=$('drawCanvas');
 const ctx=canvas.getContext('2d');
-let color='#ffffff',eraser=false,drawing=false;
+let color='#ffffff';
+let eraser=false;
+let drawing=false;
 let canvasReady=false;
 
-function resizeDraw(){
+function resizeCanvas(){
  const old=document.createElement('canvas');
  old.width=canvas.width||512;
  old.height=canvas.height||320;
- if(canvas.width)old.getContext('2d').drawImage(canvas,0,0);
-
+ if(canvas.width){
+  old.getContext('2d').drawImage(canvas,0,0);
+ }
  const w=canvas.clientWidth;
  const h=canvas.clientHeight;
  canvas.width=w*devicePixelRatio;
@@ -237,67 +321,94 @@ function resizeDraw(){
  ctx.scale(devicePixelRatio,devicePixelRatio);
  ctx.lineCap='round';
  ctx.lineJoin='round';
- ctx.lineWidth=6;
  if(canvasReady){
   ctx.drawImage(old,0,0,old.width,old.height,0,0,w,h);
  }
  canvasReady=true;
 }
-function point(e){
+function getPoint(e){
  const r=canvas.getBoundingClientRect();
  return {x:e.clientX-r.left,y:e.clientY-r.top};
 }
 canvas.addEventListener('pointerdown',e=>{
  drawing=true;
  canvas.setPointerCapture(e.pointerId);
- const p=point(e);
+ const p=getPoint(e);
  ctx.beginPath();
  ctx.moveTo(p.x,p.y);
 });
 canvas.addEventListener('pointermove',e=>{
  if(!drawing)return;
- const p=point(e);
- ctx.globalCompositeOperation=eraser?'destination-out':'source-over';
+ const p=getPoint(e);
+ ctx.globalCompositeOperation=eraser?
+ 'destination-out':'source-over';
  ctx.strokeStyle=color;
  ctx.lineWidth=eraser?25:6;
  ctx.lineTo(p.x,p.y);
  ctx.stroke();
 });
-function stopDraw(){drawing=false;ctx.closePath();}
-canvas.addEventListener('pointerup',stopDraw);
-canvas.addEventListener('pointercancel',stopDraw);
+function stopDrawing(){
+ drawing=false;
+ ctx.closePath();
+}
+canvas.addEventListener('pointerup',stopDrawing);
+canvas.addEventListener('pointercancel',stopDrawing);
 
 $('openEditor').onclick=()=>{
  $('editor').style.display='flex';
- setTimeout(resizeDraw,30);
+ setTimeout(resizeCanvas,40);
 };
 document.querySelectorAll('[data-color]').forEach(b=>{
- b.onclick=()=>{color=b.dataset.color;eraser=false};
+ b.onclick=()=>{
+  color=b.dataset.color;
+  eraser=false;
+ };
 });
 $('erase').onclick=()=>eraser=true;
-$('clear').onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
-
+$('clear').onclick=()=>{
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+};
 $('save').onclick=()=>{
  try{
   const temp=document.createElement('canvas');
-  temp.width=512;temp.height=320;
+  temp.width=512;
+  temp.height=320;
   temp.getContext('2d').drawImage(canvas,0,0,512,320);
   const data=temp.toDataURL('image/png');
   localStorage.setItem('neonWeapon',data);
-  wctx.clearRect(0,0,512,320);
-  wctx.drawImage(temp,0,0);
-  weaponTexture.needsUpdate=true;
-  $('message').textContent='Desain senjata berhasil disimpan!';
+
+  decalCtx.clearRect(0,0,512,320);
+  decalCtx.drawImage(temp,0,0);
+  texture.needsUpdate=true;
+  $('message').textContent='Senjata berhasil disimpan!';
  }catch(e){
-  $('message').textContent='Penyimpanan gagal. Coba gambar lebih sederhana.';
+  $('message').textContent='Gagal menyimpan desain';
  }
 };
-$('back').onclick=()=>$('editor').style.display='none';
+$('back').onclick=()=>{
+ $('editor').style.display='none';
+};
 
-// Kontrol joystick
+// LOAD SENJATA TERSIMPAN
+try{
+ const saved=localStorage.getItem('neonWeapon');
+ if(saved){
+  const img=new Image();
+  img.onload=()=>{
+   decalCtx.clearRect(0,0,512,320);
+   decalCtx.drawImage(img,0,0,512,320);
+   texture.needsUpdate=true;
+  };
+  img.src=saved;
+ }
+}catch(e){}
+
+// JOYSTICK
 let mx=0,my=0;
-const stick=$('stick'),knob=$('knob');
+const stick=$('stick');
+const knob=$('knob');
 let stickId=null;
+
 stick.addEventListener('pointerdown',e=>{
  stickId=e.pointerId;
  stick.setPointerCapture(e.pointerId);
@@ -305,140 +416,159 @@ stick.addEventListener('pointerdown',e=>{
 stick.addEventListener('pointermove',e=>{
  if(e.pointerId!==stickId)return;
  const r=stick.getBoundingClientRect();
- let dx=e.clientX-(r.left+r.width/2);
- let dy=e.clientY-(r.top+r.height/2);
+ let dx=e.clientX-r.left-r.width/2;
+ let dy=e.clientY-r.top-r.height/2;
  const len=Math.hypot(dx,dy);
  if(len>35){dx=dx/len*35;dy=dy/len*35;}
- mx=dx/35;my=dy/35;
+ mx=dx/35;
+ my=dy/35;
  knob.style.left=(30+dx)+'px';
  knob.style.top=(30+dy)+'px';
 });
 function stopStick(){
  stickId=null;mx=0;my=0;
- knob.style.left='30px';knob.style.top='30px';
+ knob.style.left='30px';
+ knob.style.top='30px';
 }
 stick.addEventListener('pointerup',stopStick);
 stick.addEventListener('pointercancel',stopStick);
 
-// Kamera: geser bagian tengah/kanan layar
-let yaw=0,pitch=0,lookId=null,lx=0,ly=0;
+// KAMERA FPP
+let yaw=0,pitch=0;
+let lookId=null,lx=0,ly=0;
+
 renderer.domElement.addEventListener('pointerdown',e=>{
  if(e.clientX<innerWidth*.35)return;
- lookId=e.pointerId;lx=e.clientX;ly=e.clientY;
+ lookId=e.pointerId;
+ lx=e.clientX;
+ ly=e.clientY;
  renderer.domElement.setPointerCapture(e.pointerId);
 });
 renderer.domElement.addEventListener('pointermove',e=>{
  if(e.pointerId!==lookId)return;
  yaw-=(e.clientX-lx)*.005;
  pitch-=(e.clientY-ly)*.004;
- pitch=Math.max(-1,Math.min(1,pitch));
- lx=e.clientX;ly=e.clientY;
+ pitch=THREE.MathUtils.clamp(pitch,-1,1);
+ lx=e.clientX;
+ ly=e.clientY;
 });
 renderer.domElement.addEventListener('pointerup',()=>lookId=null);
 renderer.domElement.addEventListener('pointercancel',()=>lookId=null);
 
-// Menembak target latihan
+// MENEMBAK
 const ray=new THREE.Raycaster();
-let score=0,started=false;
+let score=0;
+let started=false;
+let recoil=0;
+
 function shoot(){
  if(!started)return;
- weapon.position.z=-.98;
- setTimeout(()=>weapon.position.z=-1.15,90);
+ recoil=1;
+
  ray.setFromCamera(new THREE.Vector2(0,0),camera);
  const hits=ray.intersectObjects(targets,true);
+
  if(hits.length){
   const target=hits[0].object.parent;
   scene.remove(target);
-  const i=targets.indexOf(target);
-  if(i>=0)targets.splice(i,1);
+  const index=targets.indexOf(target);
+  if(index>=0)targets.splice(index,1);
   score++;
   $('score').textContent=score;
-  if(targets.length===0){
-   for(let i=0;i<8;i++)createTarget((Math.random()-.5)*18,-9-Math.random()*13);
-  }
+
+  if(targets.length===0)spawnTargets();
   send({type:'score',score});
  }
 }
 $('fire').addEventListener('pointerdown',e=>{
- e.preventDefault();shoot();
+ e.preventDefault();
+ shoot();
 });
 
-// Multiplayer prototype: room host dan join melalui PeerJS
-let peer=null,connections=[],isHost=false,roomCode='';
+// MULTIPLAYER PROTOTYPE
+let peer=null;
+let connections=[];
 let remote={};
-let lastNetwork=0;
+let isHost=false;
 let playerName='Pemain';
+let roomCode='';
+let lastNetwork=0;
 
-function message(t){$('message').textContent=t;}
+function status(t){$('message').textContent=t;}
 function send(data){
- connections.forEach(c=>{if(c.open)c.send(data)});
+ connections.forEach(c=>{
+  if(c.open)c.send(data);
+ });
 }
-function updatePlayerCount(){
- $('players').textContent=(1+connections.filter(c=>c.open).length)+'/8';
+function countPlayers(){
+ $('players').textContent=
+ (1+connections.filter(c=>c.open).length)+'/8';
 }
 function setupConnection(c){
  if(connections.length>=7){c.close();return;}
  connections.push(c);
  c.on('open',()=>{
-  updatePlayerCount();
-  message('Teman terhubung!');
+  countPlayers();
+  status('Teman terhubung');
   c.send({type:'hello',name:playerName});
  });
  c.on('data',data=>{
   if(data.type==='state'){
    remote[c.peer]=data;
-   if(isHost)send({...data,type:'remote',peer:c.peer});
+   if(isHost){
+    send({...data,type:'remote',peer:c.peer});
+   }
   }
-  if(data.type==='remote')remote[data.peer]=data;
+  if(data.type==='remote'){
+   remote[data.peer]=data;
+  }
   if(data.type==='score'){
    score=data.score;
    $('score').textContent=score;
   }
   if(data.type==='hello'){
-   message(data.name+' bergabung!');
+   status(data.name+' bergabung');
   }
  });
  c.on('close',()=>{
   delete remote[c.peer];
   connections=connections.filter(x=>x!==c);
-  updatePlayerCount();
+  countPlayers();
  });
 }
-
 function createRoom(){
- if(!window.Peer){message('Layanan koneksi belum tersedia');return;}
+ if(!window.Peer){status('PeerJS tidak tersedia');return;}
  playerName=$('name').value.trim()||'Pemain';
  isHost=true;
  peer=new Peer();
  peer.on('open',id=>{
   roomCode=id;
   $('room').textContent=id.slice(0,9);
-  message('Room siap! Bagikan kode: '+id);
+  status('Bagikan kode: '+id);
   startGame();
  });
  peer.on('connection',c=>{
   if(connections.length<7)setupConnection(c);
   else c.close();
  });
- peer.on('error',e=>message('Koneksi gagal: '+e.type));
+ peer.on('error',e=>status('Koneksi gagal: '+e.type));
 }
 function joinRoom(){
- if(!window.Peer){message('Layanan koneksi belum tersedia');return;}
- const id=$('roomCode').value.trim();
- if(!id){message('Masukkan kode room teman');return;}
+ if(!window.Peer){status('PeerJS tidak tersedia');return;}
+ roomCode=$('roomCode').value.trim();
+ if(!roomCode){status('Masukkan kode room');return;}
  playerName=$('name').value.trim()||'Pemain';
  isHost=false;
  peer=new Peer();
  peer.on('open',()=>{
-  const c=peer.connect(id);
+  const c=peer.connect(roomCode);
   setupConnection(c);
   c.on('open',()=>{
-   roomCode=id;
-   $('room').textContent=id.slice(0,9);
+   $('room').textContent=roomCode.slice(0,9);
    startGame();
   });
  });
- peer.on('error',e=>message('Tidak bisa bergabung: '+e.type));
+ peer.on('error',e=>status('Tidak bisa masuk: '+e.type));
 }
 function startGame(){
  started=true;
@@ -452,14 +582,14 @@ $('solo').onclick=()=>{
  startGame();
 };
 
-// Remote player display
+// MODEL PEMAIN LAIN
 function updateRemote(){
  for(const id in remote){
   const p=remote[id];
   if(!p.mesh){
    p.mesh=new THREE.Mesh(
     new THREE.BoxGeometry(.65,1.5,.55),
-    new THREE.MeshLambertMaterial({color:0x30dfff})
+    new THREE.MeshLambertMaterial({color:0x28dfff})
    );
    scene.add(p.mesh);
   }
@@ -467,18 +597,24 @@ function updateRemote(){
  }
 }
 
-// Game loop
+// GAME LOOP
 const clock=new THREE.Clock();
+
 function animate(){
  requestAnimationFrame(animate);
  const dt=Math.min(clock.getDelta(),.04);
+
  if(started){
   camera.rotation.order='YXZ';
   camera.rotation.y=yaw;
   camera.rotation.x=pitch;
 
-  const forward=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));
-  const right=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+  const forward=new THREE.Vector3(
+   -Math.sin(yaw),0,-Math.cos(yaw)
+  );
+  const right=new THREE.Vector3(
+   Math.cos(yaw),0,-Math.sin(yaw)
+  );
   const movement=new THREE.Vector3();
   movement.addScaledVector(forward,-my);
   movement.addScaledVector(right,mx);
@@ -487,9 +623,15 @@ function animate(){
    movement.normalize().multiplyScalar(5*dt);
    camera.position.add(movement);
   }
+
   camera.position.x=THREE.MathUtils.clamp(camera.position.x,-22,22);
   camera.position.z=THREE.MathUtils.clamp(camera.position.z,-22,22);
   camera.position.y=1.7;
+
+  // Animasi tangan dan senjata
+  recoil=Math.max(0,recoil-dt*5);
+  weaponGroup.position.z=recoil*.12;
+  weaponGroup.position.y=Math.sin(performance.now()*.008)*.008;
 
   updateRemote();
 
@@ -508,6 +650,7 @@ function animate(){
 }
 animate();
 
+// RESPONSIVE
 addEventListener('resize',()=>{
  camera.aspect=innerWidth/innerHeight;
  camera.updateProjectionMatrix();
