@@ -3,340 +3,500 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>FRONTLINE FPS</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>NEON STRIKE MOBILE</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;overflow:hidden;background:#111;color:white;font-family:Arial}
-canvas{display:block;touch-action:none}
-#hud{position:fixed;inset:0;pointer-events:none}
-.top{display:flex;justify-content:space-between;padding:15px}
-.box{background:#101a20dd;padding:10px 16px;border:1px solid #607c8a;border-radius:9px}
-#cross{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:25px;color:white}
-#bottom{position:absolute;bottom:20px;left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:15px}
-.controls{display:flex;gap:9px;pointer-events:auto}
-button{background:#263c49;color:white;border:1px solid #8ca9b8;border-radius:12px;padding:15px;font-weight:bold}
-#fire{background:#a42d25;padding:22px}
-#stick{width:110px;height:110px;border-radius:50%;border:2px solid #ffffff88;background:#ffffff18;pointer-events:auto;position:relative;touch-action:none}
-#knob{position:absolute;width:43px;height:43px;border-radius:50%;background:#c6d7df;left:32px;top:32px}
-#start{position:fixed;inset:0;background:#111e29;display:grid;place-items:center;z-index:10}
-.card{text-align:center;padding:25px;background:#172b39;border-radius:20px;max-width:340px;width:90%}
-#play{background:#267c9d;width:100%;padding:16px}
+body{margin:0;background:#080d18;color:white;font-family:Arial;overflow:hidden;touch-action:none}
+#game{position:fixed;inset:0}
+#hud{position:fixed;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;gap:6px}
+.panel{background:#101c2ddd;border:1px solid #31d9ff66;padding:9px;border-radius:9px;font-size:12px}
+#cross{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#4df4ff;font-size:25px;pointer-events:none}
+#controls{position:fixed;bottom:20px;left:0;right:0;display:flex;justify-content:space-between;align-items:end;padding:0 18px}
+#stick{width:105px;height:105px;border:2px solid #50dfff88;border-radius:50%;background:#16304788;position:relative;touch-action:none}
+#knob{position:absolute;left:30px;top:30px;width:42px;height:42px;background:#42dfffbb;border-radius:50%}
+#fire{width:78px;height:78px;border:2px solid #ff9aaa;border-radius:50%;background:#ed3959;color:white;font-weight:bold}
+#menu{position:fixed;inset:0;z-index:5;background:#080d18ee;display:flex;align-items:center;justify-content:center;overflow:auto}
+.box{width:min(90%,390px);padding:20px;background:#111c2d;border:1px solid #29cbe866;border-radius:18px;text-align:center;margin:20px 0}
+h1{color:#42eaff;letter-spacing:3px}
+button{padding:12px;border:0;border-radius:9px;background:#24cde8;color:#07121b;font-weight:bold}
+input{width:100%;padding:12px;margin:6px 0;background:#081421;border:1px solid #31516a;color:white;border-radius:8px}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+#drawScreen{position:fixed;inset:0;z-index:8;background:#080d18;display:none;flex-direction:column;padding:12px;gap:10px}
+#canvas{width:100%;flex:1;min-height:180px;background:#080808;border:1px solid #4beaff;border-radius:12px;touch-action:none}
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.tools button{padding:9px}
+#status{font-size:12px;color:#80eaff;min-height:18px}
 </style>
 </head>
 <body>
-<div id="start">
- <div class="card">
-  <h1>FRONTLINE FPS</h1>
-  <p>3D First Person Shooter</p>
-  <p>Mode latihan • Target shooting</p>
-  <button id="play">MULAI GAME</button>
- </div>
-</div>
+<div id="game"></div>
 <div id="hud">
- <div class="top">
-  <div class="box">HP: <b id="hp">100</b></div>
-  <div class="box">SKOR: <b id="score">0</b></div>
-  <div class="box">PELURU: <b id="ammo">30</b></div>
- </div>
- <div id="cross">+</div>
- <div id="bottom">
-  <div id="stick"><div id="knob"></div></div>
-  <div class="controls">
-   <button id="jump">JUMP</button>
-   <button id="reload">RELOAD</button>
-   <button id="fire">TEMBAK</button>
+ <div class="panel">SCORE: <b id="score">0</b></div>
+ <div class="panel">ROOM: <b id="roomLabel">OFFLINE</b></div>
+ <div class="panel">PLAYER: <b id="players">1/8</b></div>
+</div>
+<div id="cross">+</div>
+<div id="controls">
+ <div id="stick"><div id="knob"></div></div>
+ <button id="fire">TEMBAK</button>
+</div>
+
+<div id="menu">
+ <div class="box">
+  <h1>NEON STRIKE</h1>
+  <p>DRAW YOUR WEAPON</p>
+  <p style="color:#a5bbcf;font-size:13px">3D FPS • ONLINE MULTIPLAYER</p>
+  <input id="nickname" maxlength="16" placeholder="Nama pemain">
+  <div class="actions">
+   <button id="create">BUAT ROOM</button>
+   <button id="join">GABUNG ROOM</button>
   </div>
+  <input id="roomInput" maxlength="30" placeholder="Kode room teman">
+  <button id="drawButton" style="width:100%;margin-top:5px">GAMBAR SENJATA</button>
+  <p id="status">Siap bermain</p>
+  <button id="playSolo" style="width:100%;background:#243e59;color:white">MAIN SENDIRI</button>
  </div>
 </div>
 
+<div id="drawScreen">
+ <h2 style="text-align:center;color:#42eaff">GAMBAR SENJATAMU</h2>
+ <canvas id="canvas"></canvas>
+ <div class="tools">
+  <button data-color="#ffffff">Putih</button>
+  <button data-color="#ff4545">Merah</button>
+  <button data-color="#32dfff">Biru</button>
+  <button data-color="#39e889">Hijau</button>
+  <button id="eraser">Penghapus</button>
+  <button id="clear">Hapus</button>
+ </div>
+ <div class="tools">
+  <button id="save">SIMPAN SENJATA</button>
+  <button id="closeDraw" style="background:#34465c;color:white">KEMBALI</button>
+ </div>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script type="module">
 import * as THREE from
 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
+const $=id=>document.getElementById(id);
 const scene=new THREE.Scene();
-scene.background=new THREE.Color(0x9bb2c1);
-scene.fog=new THREE.Fog(0x9bb2c1,20,90);
+scene.background=new THREE.Color(0x091426);
+scene.fog=new THREE.Fog(0x091426,18,50);
 
-const camera=new THREE.PerspectiveCamera(
-75,innerWidth/innerHeight,.1,1000
-);
+const camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,.1,100);
 camera.position.set(0,1.7,5);
 
 const renderer=new THREE.WebGLRenderer({
- antialias:true,
- powerPreference:'high-performance'
+ antialias:false,powerPreference:'low-power'
 });
 renderer.setSize(innerWidth,innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
-renderer.shadowMap.enabled=true;
-renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-document.body.appendChild(renderer.domElement);
+renderer.setPixelRatio(Math.min(devicePixelRatio,1));
+renderer.shadowMap.enabled=false;
+$('game').appendChild(renderer.domElement);
 
-scene.add(new THREE.HemisphereLight(0xffffff,0x56616a,2));
+scene.add(new THREE.HemisphereLight(0xb8dcff,0x253044,2));
+const light=new THREE.DirectionalLight(0xffffff,1);
+light.position.set(3,8,5);
+scene.add(light);
 
-const sun=new THREE.DirectionalLight(0xffffff,2);
-sun.position.set(10,20,10);
-sun.castShadow=true;
-scene.add(sun);
-
-// Lantai arena
-const ground=new THREE.Mesh(
- new THREE.PlaneGeometry(100,100),
- new THREE.MeshStandardMaterial({color:0x52665b})
+// Arena
+const floor=new THREE.Mesh(
+ new THREE.PlaneGeometry(48,48),
+ new THREE.MeshLambertMaterial({color:0x17283b})
 );
-ground.rotation.x=-Math.PI/2;
-ground.receiveShadow=true;
-scene.add(ground);
+floor.rotation.x=-Math.PI/2;
+scene.add(floor);
 
-// Bangunan arena
-function building(x,z,w,h,d,color=0x69747b){
- const obj=new THREE.Mesh(
-  new THREE.BoxGeometry(w,h,d),
-  new THREE.MeshStandardMaterial({color})
+const grid=new THREE.GridHelper(48,24,0x17b9e8,0x29435b);
+grid.position.y=.02;
+scene.add(grid);
+
+function wall(x,y,z,sx,sy,sz){
+ const m=new THREE.Mesh(
+  new THREE.BoxGeometry(sx,sy,sz),
+  new THREE.MeshLambertMaterial({color:0x29415b})
  );
- obj.position.set(x,h/2,z);
- obj.castShadow=true;
- obj.receiveShadow=true;
- scene.add(obj);
+ m.position.set(x,y,z);scene.add(m);
 }
-building(-9, -9,5,5,5);
-building(9,-12,6,4,5);
-building(-12,8,5,6,5);
-building(12,9,5,5,6);
-building(0,-22,18,5,3);
+wall(0,2,-23,46,4,1);
+wall(0,2,23,46,4,1);
+wall(-23,2,0,1,4,46);
+wall(23,2,0,1,4,46);
 
-// Senjata sederhana FPP
-const gun=new THREE.Group();
-const metal=new THREE.MeshStandardMaterial({
- color:0x27343d,metalness:.7,roughness:.3
-});
-const body=new THREE.Mesh(
- new THREE.BoxGeometry(.18,.17,.75),metal
+for(let i=0;i<12;i++){
+ const m=new THREE.Mesh(
+  new THREE.BoxGeometry(2,1.5,2),
+  new THREE.MeshLambertMaterial({color:0x263c56})
+ );
+ m.position.set((Math.random()-.5)*32,.75,-Math.random()*18);
+ scene.add(m);
+}
+
+// Senjata dari gambar pemain
+const gunCanvas=document.createElement('canvas');
+gunCanvas.width=512;gunCanvas.height=256;
+const gc=gunCanvas.getContext('2d');
+
+function drawGun(){
+ gc.clearRect(0,0,512,256);
+ const saved=localStorage.getItem('neonGun');
+ if(saved){
+  const img=new Image();
+  img.onload=()=>gc.drawImage(img,0,0,512,256);
+  img.src=saved;
+ }else{
+  gc.strokeStyle='white';gc.lineWidth=9;
+  gc.lineJoin='round';
+  gc.strokeRect(100,85,260,75);
+  gc.strokeRect(270,155,70,65);
+  gc.strokeRect(350,100,90,25);
+ }
+}
+drawGun();
+
+const gunTexture=new THREE.CanvasTexture(gunCanvas);
+const gun=new THREE.Mesh(
+ new THREE.PlaneGeometry(1.15,.58),
+ new THREE.MeshBasicMaterial({
+  map:gunTexture,transparent:true,depthTest:false
+ })
 );
-body.position.set(.35,-.28,-.65);
-gun.add(body);
-const barrel=new THREE.Mesh(
- new THREE.CylinderGeometry(.035,.035,.65,12),metal
-);
-barrel.rotation.x=Math.PI/2;
-barrel.position.set(.35,-.23,-1.12);
-gun.add(barrel);
-const grip=new THREE.Mesh(
- new THREE.BoxGeometry(.12,.3,.17),metal
-);
-grip.position.set(.35,-.47,-.48);
-gun.add(grip);
+gun.position.set(.48,-.42,-.85);
 camera.add(gun);
 scene.add(camera);
 
 // Target latihan
 const targets=[];
-const targetMaterial=new THREE.MeshStandardMaterial({
- color:0xb54d39
-});
-function spawnTargets(){
- targets.forEach(t=>scene.remove(t));
- targets.length=0;
- for(let i=0;i<8;i++){
-  const t=new THREE.Mesh(
-   new THREE.SphereGeometry(.55,16,12),
-   targetMaterial.clone()
-  );
-  t.position.set(
-   (Math.random()-.5)*18,
-   1.6+Math.random()*2,
-   -8-Math.random()*25
-  );
-  t.castShadow=true;
-  t.userData.alive=true;
-  scene.add(t);
-  targets.push(t);
- }
-}
-spawnTargets();
-
-let score=0,ammo=30,recoil=0;
-let pitch=0,yaw=0;
-let moveX=0,moveY=0;
-let jumping=false,vertical=0;
-let reloading=false;
-
-const raycaster=new THREE.Raycaster();
-
-function shoot(){
- if(reloading||ammo<=0)return;
- ammo--;
- recoil=Math.min(recoil+.055,.35);
- document.getElementById('ammo').textContent=ammo;
-
- camera.rotation.x-=.018;
- raycaster.setFromCamera(new THREE.Vector2(0,0),camera);
- const hits=raycaster.intersectObjects(targets);
- if(hits.length){
-  const t=hits[0].object;
-  if(t.userData.alive){
-   t.userData.alive=false;
-   scene.remove(t);
-   score+=100;
-   document.getElementById('score').textContent=score;
-  }
- }
-}
-
-document.getElementById('fire').onclick=shoot;
-
-document.getElementById('reload').onclick=()=>{
- if(reloading||ammo===30)return;
- reloading=true;
- setTimeout(()=>{
-  ammo=30;
-  reloading=false;
-  document.getElementById('ammo').textContent=ammo;
- },1200);
-};
-
-document.getElementById('jump').onclick=()=>{
- if(!jumping){
-  jumping=true;
-  vertical=5;
- }
-};
-
-// Joystick
-const stick=document.getElementById('stick');
-const knob=document.getElementById('knob');
-let stickId=null;
-stick.addEventListener('pointerdown',e=>{
- stickId=e.pointerId;
- stick.setPointerCapture(stickId);
-});
-stick.addEventListener('pointermove',e=>{
- if(e.pointerId!==stickId)return;
- const r=stick.getBoundingClientRect();
- const dx=e.clientX-(r.left+r.width/2);
- const dy=e.clientY-(r.top+r.height/2);
- const len=Math.hypot(dx,dy);
- const scale=Math.min(1,40/(len||1));
- moveX=dx/40*scale;
- moveY=dy/40*scale;
- knob.style.transform=`translate(${moveX*32}px,${moveY*32}px)`;
-});
-function resetStick(){
- stickId=null;moveX=0;moveY=0;
- knob.style.transform='translate(0,0)';
-}
-stick.addEventListener('pointerup',resetStick);
-stick.addEventListener('pointercancel',resetStick);
-
-// Geser sisi kanan untuk melihat
-let lookId=null,lastX=0,lastY=0;
-renderer.domElement.addEventListener('pointerdown',e=>{
- if(e.clientX>innerWidth*.38){
-  lookId=e.pointerId;
-  lastX=e.clientX;lastY=e.clientY;
-  renderer.domElement.setPointerCapture(lookId);
- }
-});
-renderer.domElement.addEventListener('pointermove',e=>{
- if(e.pointerId!==lookId)return;
- const dx=e.clientX-lastX;
- const dy=e.clientY-lastY;
- lastX=e.clientX;lastY=e.clientY;
- yaw-=dx*.004;
- pitch-=dy*.004;
- pitch=Math.max(-1.2,Math.min(1.2,pitch));
- camera.rotation.order='YXZ';
- camera.rotation.y=yaw;
- camera.rotation.x=pitch;
-});
-renderer.domElement.addEventListener('pointerup',()=>lookId=null);
-renderer.domElement.addEventListener('pointercancel',()=>lookId=null);
-
-document.getElementById('play').onclick=()=>{
- document.getElementById('start').style.display='none';
- animate();
-};
-
-let previous=performance.now();
-function animate(now=performance.now()){
- requestAnimationFrame(animate);
- const dt=Math.min((now-previous)/1000,.05);
- previous=now;
-
- const forward=new THREE.Vector3(
-  -Math.sin(yaw),0,-Math.cos(yaw)
+function makeTarget(x,z){
+ const group=new THREE.Group();
+ const body=new THREE.Mesh(
+  new THREE.BoxGeometry(.8,1.3,.5),
+  new THREE.MeshLambertMaterial({color:0xff375f})
  );
- const right=new THREE.Vector3(
-  Math.cos(yaw),0,-Math.sin(yaw)
+ body.position.y=.8;
+ group.add(body);
+ const head=new THREE.Mesh(
+  new THREE.SphereGeometry(.3,7,5),
+  new THREE.MeshLambertMaterial({color:0xffc45b})
  );
+ head.position.y=1.7;
+ group.add(head);
+ group.position.set(x,0,z);
+ scene.add(group);
+ targets.push(group);
+}
+for(let i=0;i<8;i++)makeTarget((Math.random()-.5)*18,-8-Math.random()*12);
 
- camera.position.addScaledVector(forward,-moveY*5*dt);
- camera.position.addScaledVector(right,moveX*5*dt);
+// Multiplayer
+let peer=null,connections=[],isHost=false,roomCode='';
+let myName='Pemain',score=0,gameStarted=false;
+const remotePlayers={};
+const clock=new THREE.Clock();
 
- if(jumping){
-  camera.position.y+=vertical*dt;
-  vertical-=12*dt;
-  if(camera.position.y<=1.7){
-   camera.position.y=1.7;
-   jumping=false;
-   vertical=0;
-  }
+function updatePlayers(){
+ $('players').textContent=(connections.filter(c=>c.open).length+1)+'/8';
+}
+function status(t){$('status').textContent=t}
+
+function sendAll(data){
+ connections.forEach(c=>{
+  if(c.open)c.send(data);
+ });
+}
+
+function setupConnection(conn){
+ if(connections.length>=7){
+  conn.close();return;
  }
+ connections.push(conn);
+ conn.on('data',data=>{
+  if(data.type==='state'){
+   remotePlayers[conn.peer]=data;
+   if(isHost)sendAll({...data,peer:conn.peer,type:'remote'});
+  }
+  if(data.type==='remote'){
+   remotePlayers[data.peer]=data;
+  }
+  if(data.type==='hit'&&isHost){
+   score++;
+   $('score').textContent=score;
+   sendAll({type:'score',score});
+  }
+  if(data.type==='score'){
+   $('score').textContent=data.score;
+  }
+ });
+ conn.on('close',()=>{
+  delete remotePlayers[conn.peer];
+  connections=connections.filter(c=>c!==conn);
+  updatePlayers();
+ });
+ conn.on('open',()=>{
+  status('Teman berhasil bergabung!');
+  updatePlayers();
+  conn.send({type:'hello',name:myName});
+ });
+}
 
- recoil*=Math.pow(.08,dt);
- gun.position.z=recoil*.3;
- gun.position.y=-recoil*.4;
+function startPeer(host){
+ if(!window.Peer){
+  status('PeerJS tidak berhasil dimuat');return;
+ }
+ isHost=host;
+ myName=$('nickname').value.trim()||'Pemain';
+ peer=new Peer(host?'NS-'+Math.random().toString(36).slice(2,10).toUpperCase():undefined);
 
- // Target bergerak ringan
- targets.forEach((t,i)=>{
-  if(t.userData.alive){
-   t.position.y=1.8+Math.sin(now*.001+i)*.3;
+ peer.on('open',id=>{
+  if(host){
+   roomCode=id;
+   $('roomLabel').textContent=roomCode;
+   status('Room dibuat: '+roomCode);
+   enterGame();
+  }else{
+   roomCode=$('roomInput').value.trim();
+   const conn=peer.connect(roomCode);
+   conn.on('open',()=>enterGame());
+   setupConnection(conn);
   }
  });
 
+ peer.on('connection',conn=>{
+  if(isHost)setupConnection(conn);
+ });
+ peer.on('error',err=>status('Koneksi: '+err.type));
+}
+
+function enterGame(){
+ gameStarted=true;
+ $('menu').style.display='none';
+ $('roomLabel').textContent=roomCode||'SOLO';
+ status('Berhasil masuk arena');
+}
+
+$('create').onclick=()=>startPeer(true);
+$('join').onclick=()=>{
+ if(!$('roomInput').value.trim()){
+  status('Masukkan kode room teman');return;
+ }
+ startPeer(false);
+};
+$('playSolo').onclick=()=>{
+ myName=$('nickname').value.trim()||'Pemain';
+ roomCode='SOLO';
+ enterGame();
+};
+
+// Remote players
+function updateRemote(){
+ Object.keys(remotePlayers).forEach(id=>{
+  const p=remotePlayers[id];
+  if(!p.mesh){
+   const mesh=new THREE.Mesh(
+    new THREE.CapsuleGeometry(.35,.9,3,6),
+    new THREE.MeshLambertMaterial({color:0x25dfff})
+   );
+   scene.add(mesh);p.mesh=mesh;
+  }
+  p.mesh.position.set(p.x,.8,p.z);
+  p.mesh.rotation.y=p.yaw;
+ });
+}
+
+// Gerakan
+let moveX=0,moveY=0;
+let yaw=0,pitch=0;
+const keys={};
+let lastSend=0;
+
+const stick=$('stick'),knob=$('knob');
+let stickPointer=null;
+
+stick.addEventListener('pointerdown',e=>{
+ stickPointer=e.pointerId;stick.setPointerCapture(e.pointerId);
+});
+stick.addEventListener('pointermove',e=>{
+ if(stickPointer!==e.pointerId)return;
+ const r=stick.getBoundingClientRect();
+ const dx=e.clientX-(r.left+r.width/2);
+ const dy=e.clientY-(r.top+r.height/2);
+ const d=Math.min(35,Math.hypot(dx,dy));
+ const a=Math.atan2(dy,dx);
+ moveX=Math.cos(a)*d/35;
+ moveY=Math.sin(a)*d/35;
+ knob.style.left=(30+moveX*30)+'px';
+ knob.style.top=(30+moveY*30)+'px';
+});
+function stopStick(){
+ stickPointer=null;moveX=0;moveY=0;
+ knob.style.left='30px';knob.style.top='30px';
+}
+stick.addEventListener('pointerup',stopStick);
+stick.addEventListener('pointercancel',stopStick);
+
+// Geser kanan/kiri untuk melihat arena
+let lookPointer=null,lastX=0,lastY=0;
+renderer.domElement.addEventListener('pointerdown',e=>{
+ if(e.clientX<innerWidth*.35)return;
+ lookPointer=e.pointerId;
+ lastX=e.clientX;lastY=e.clientY;
+ renderer.domElement.setPointerCapture(e.pointerId);
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+ if(e.pointerId!==lookPointer)return;
+ yaw-=(e.clientX-lastX)*.005;
+ pitch-=(e.clientY-lastY)*.004;
+ pitch=Math.max(-1.1,Math.min(1.1,pitch));
+ lastX=e.clientX;lastY=e.clientY;
+});
+renderer.domElement.addEventListener('pointerup',()=>lookPointer=null);
+renderer.domElement.addEventListener('pointercancel',()=>lookPointer=null);
+
+// Menembak
+const raycaster=new THREE.Raycaster();
+function shoot(){
+ if(!gameStarted)return;
+ gun.position.z=-.68;
+ setTimeout(()=>gun.position.z=-.85,100);
+
+ raycaster.setFromCamera(new THREE.Vector2(0,0),camera);
+ const hits=raycaster.intersectObjects(targets,true);
+ if(hits.length){
+  const target=hits[0].object.parent;
+  scene.remove(target);
+  targets.splice(targets.indexOf(target),1);
+  score++;
+  $('score').textContent=score;
+  sendAll({type:'score',score});
+ }
+ // Tembakan juga bisa mengenai pemain lain
+ Object.entries(remotePlayers).forEach(([id,p])=>{
+  if(!p.mesh)return;
+  const hit=raycaster.intersectObject(p.mesh);
+  if(hit.length){
+   if(isHost){
+    score++;$('score').textContent=score;
+    sendAll({type:'score',score});
+   }else{
+    const c=connections.find(x=>x.open);
+    if(c)c.send({type:'hit',target:id});
+   }
+  }
+ });
+}
+$('fire').addEventListener('pointerdown',e=>{
+ e.preventDefault();shoot();
+});
+
+// Drawing studio
+const screen=$('drawScreen'),canvas=$('canvas');
+const ctx=canvas.getContext('2d');
+let drawing=false,color='#ffffff',eraser=false;
+
+function resizeCanvas(){
+ const old=canvas.toDataURL();
+ const w=canvas.clientWidth,h=canvas.clientHeight;
+ canvas.width=w*devicePixelRatio;
+ canvas.height=h*devicePixelRatio;
+ ctx.scale(devicePixelRatio,devicePixelRatio);
+ ctx.lineCap='round';ctx.lineJoin='round';
+ const img=new Image();
+ img.onload=()=>ctx.drawImage(img,0,0,w,h);
+ img.src=old;
+}
+$('drawButton').onclick=()=>{
+ screen.style.display='flex';
+ setTimeout(()=>{
+  if(!canvas.width)resizeCanvas();
+ },30);
+};
+function position(e){
+ const r=canvas.getBoundingClientRect();
+ return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+canvas.addEventListener('pointerdown',e=>{
+ drawing=true;canvas.setPointerCapture(e.pointerId);
+ const p=position(e);ctx.beginPath();ctx.moveTo(p.x,p.y);
+});
+canvas.addEventListener('pointermove',e=>{
+ if(!drawing)return;
+ const p=position(e);
+ ctx.globalCompositeOperation=eraser?'destination-out':'source-over';
+ ctx.strokeStyle=color;ctx.lineWidth=eraser?24:6;
+ ctx.lineTo(p.x,p.y);ctx.stroke();
+});
+canvas.addEventListener('pointerup',()=>drawing=false);
+canvas.addEventListener('pointercancel',()=>drawing=false);
+
+document.querySelectorAll('[data-color]').forEach(b=>{
+ b.onclick=()=>{color=b.dataset.color;eraser=false};
+});
+$('eraser').onclick=()=>eraser=true;
+$('clear').onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
+
+$('save').onclick=()=>{
+ const data=canvas.toDataURL('image/png');
+ try{
+  localStorage.setItem('neonGun',data);
+  gc.clearRect(0,0,512,256);
+  const img=new Image();
+  img.onload=()=>{
+   gc.drawImage(img,0,0,512,256);
+   gunTexture.needsUpdate=true;
+  };
+  img.src=data;
+  status('Senjata berhasil disimpan!');
+ }catch(e){status('Gambar terlalu besar untuk disimpan');}
+};
+$('closeDraw').onclick=()=>screen.style.display='none';
+
+// Animasi
+function animate(){
+ requestAnimationFrame(animate);
+ const dt=Math.min(clock.getDelta(),.04);
+
+ if(gameStarted){
+  camera.rotation.order='YXZ';
+  camera.rotation.y=yaw;
+  camera.rotation.x=pitch;
+
+  const forward=new THREE.Vector3(-Math.sin(yaw),0,-Math.cos(yaw));
+  const right=new THREE.Vector3(Math.cos(yaw),0,-Math.sin(yaw));
+  const movement=new THREE.Vector3();
+  movement.addScaledVector(forward,-moveY);
+  movement.addScaledVector(right,moveX);
+
+  if(movement.length()>0){
+   movement.normalize().multiplyScalar(5*dt);
+   camera.position.add(movement);
+  }
+  camera.position.x=THREE.MathUtils.clamp(camera.position.x,-21,21);
+  camera.position.z=THREE.MathUtils.clamp(camera.position.z,-21,21);
+  camera.position.y=1.7;
+
+  updateRemote();
+  if(peer&&connections.length){
+   if(performance.now()-lastSend>80){
+    sendAll({
+     type:'state',x:camera.position.x,z:camera.position.z,
+     yaw,name:myName,score
+    });
+    lastSend=performance.now();
+   }
+  }
+ }
  renderer.render(scene,camera);
 }
+animate();
 
 addEventListener('resize',()=>{
  camera.aspect=innerWidth/innerHeight;
  camera.updateProjectionMatrix();
  renderer.setSize(innerWidth,innerHeight);
+ renderer.setPixelRatio(Math.min(devicePixelRatio,1));
 });
 </script>
 </body>
 </html>
-<script type="module">
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-
-import {
-  getDatabase,
-  ref,
-  set
-} from
-"https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAf-StAvg-0Q2-hU5UaPChJ8J2DjZc3Ygs",
-  authDomain: "counter-s-lite.firebaseapp.com",
-  databaseURL: "https://counter-s-lite-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "counter-s-lite",
-  storageBucket: "counter-s-lite.firebasestorage.app",
-  messagingSenderId: "277557533707",
-  appId: "1:277557533707:web:f47067db0fc3d89b06bb0e",
-  measurementId: "G-FZE5BNTE6F"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-set(ref(db, "connectionTest/status"), {
-  connected: true,
-  game: "FRONTLINE FPS"
-})
-.then(() => console.log("DATABASE TERHUBUNG"))
-.catch(error => console.error("GAGAL:", error));
-window.firebaseDB = db;
-
-console.log("FRONTLINE FPS: Firebase siap!");
-</script>
